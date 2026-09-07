@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SearchBox from '../../components/SearchBox.astro';
+---
+
+<BaseLayout title="Search" description="Search Maths Made Clearer for a guide, tutorial or practice set.">
+  <section class="wrap">
+    <div class="section-head">
+      <h1>Search</h1>
+      <p id="search-status">Type what you're stuck on below.</p>
+    </div>
+    <SearchBox size="hero" placeholder="e.g. percentage increase, nth term, fractions..." />
+
+    <div id="search-page-results" class="results-grid" aria-live="polite"></div>
+  </section>
+
+  <script>
+    function scoreEntry(entry, query) {
+      const q = query.toLowerCase().trim();
+      let s = 0;
+      if (entry.title.toLowerCase() === q) s += 100;
+      if (entry.title.toLowerCase().includes(q)) s += 50;
+      if (entry.keywords.some((k) => k === q)) s += 60;
+      if (entry.keywords.some((k) => k.includes(q))) s += 30;
+      if (entry.topic.toLowerCase().includes(q)) s += 10;
+      const words = q.split(/\s+/).filter(Boolean);
+      words.forEach((w) => {
+        if (entry.title.toLowerCase().includes(w)) s += 8;
+        if (entry.keywords.some((k) => k.includes(w))) s += 6;
+      });
+      return s;
+    }
+
+    async function run() {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q') || '';
+      const input = document.getElementById('site-search-input');
+      if (input && q) input.value = q;
+
+      const status = document.getElementById('search-status');
+      const container = document.getElementById('search-page-results');
+      if (!q) {
+        status.textContent = "Type what you're stuck on above.";
+        return;
+      }
+
+      const data = await fetch('/search-index.json').then((r) => r.json());
+      const results = data
+        .map((entry) => ({ entry, s: scoreEntry(entry, q) }))
+        .filter((r) => r.s > 0)
+        .sort((a, b) => b.s - a.s)
+        .slice(0, 15)
+        .map((r) => r.entry);
+
+      if (results.length === 0) {
+        status.textContent = `No matches yet for "${q}". Try a shorter word, or let us know on Request Help.`;
+        container.innerHTML = `<a class="result-row" href="/request-help/"><span><span class="rt">Request Help</span>Ask for a guide on this topic</span> →</a>`;
+        return;
+      }
+
+      status.textContent = `${results.length} result${results.length === 1 ? '' : 's'} for "${q}"`;
+      container.innerHTML = results
+        .map((r) => `<a class="result-row" href="${r.url}" data-track="search-result-click" data-resource="${r.slug}"><span><span class="rt">${r.typeLabel} · ${r.topic}</span>${r.title}</span> →</a>`)
+        .join('');
+    }
+
+    run();
+  </script>
+</BaseLayout>
+
+<style>
+  .results-grid {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 1rem;
+    max-width: 720px;
+  }
+  .result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--paper-raised);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .result-row:hover { border-color: var(--accent); }
+  .result-row .rt { font-size: 0.85rem; color: var(--accent-dark); font-weight: 600; display: block; }
+</style>

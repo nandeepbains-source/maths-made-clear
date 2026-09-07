@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import { topics } from '../../data/topics.js';
+import { getResourcesByTier } from '../../data/resources.js';
+
+const foundation = getResourcesByTier('foundation');
+const higher = getResourcesByTier('higher');
+
+const examSkills = [
+  { title: 'How to Show Your Working', blurb: 'Why method marks matter, and how to lay out a solution examiners can follow.' },
+  { title: 'How to Check an Answer', blurb: 'Quick ways to sense-check a result before you move on.' },
+  { title: 'Using Your Calculator Properly', blurb: 'Getting the order of operations, brackets and fractions right on your calculator.' },
+  { title: 'Estimating Answers', blurb: 'Round to 1 significant figure to check a calculation is roughly right.' },
+  { title: 'Understanding Command Words', blurb: "What 'simplify', 'solve', 'factorise' and 'evaluate' actually ask you to do." },
+  { title: "What 'Show That' Means", blurb: 'How to prove a given statement rather than just stating an answer.' },
+  { title: 'How to Approach a Problem-Solving Question', blurb: 'A simple structure for multi-step questions when you don\'t know where to start.' },
+];
+---
+
+<BaseLayout
+  title="GCSE Revision"
+  description="Foundation and Higher GCSE Maths revision, organised by topic, plus exam skills for England's GCSE."
+>
+  <section class="wrap">
+    <div class="section-head">
+      <h1>GCSE Revision</h1>
+      <p>Choose your tier, then work through the topics you need.</p>
+    </div>
+
+    <div class="tier-choice">
+      <button type="button" class="tier-card is-active" data-tier="foundation" data-track="topic-select" data-topic="gcse-foundation">
+        <h2>Foundation</h2>
+        <p>Grades 1–5</p>
+      </button>
+      <button type="button" class="tier-card" data-tier="higher" data-track="topic-select" data-topic="gcse-higher">
+        <h2>Higher</h2>
+        <p>Grades 4–9</p>
+      </button>
+    </div>
+  </section>
+
+  <section class="wrap band">
+    <div class="section-head">
+      <h2 id="tier-heading">Foundation topics</h2>
+      <p>Resources tagged for your tier, grouped by topic strand.</p>
+    </div>
+
+    {topics.map((t) => (
+      <div class="tier-topic-block" data-topic-block={t.slug}>
+        <h3>{t.name}</h3>
+        <div class="grid grid-3" data-tier-grid={t.slug}></div>
+      </div>
+    ))}
+
+    <p class="eyebrow-quiet" id="tier-empty" hidden>Nothing tagged for this tier and topic yet — try the other tier, or use Request Help.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <h2>GCSE Exam Skills</h2>
+      <p>The habits that turn maths knowledge into exam marks.</p>
+    </div>
+    <div class="grid grid-3">
+      {examSkills.map((s) => (
+        <div class="card">
+          <h3>{s.title}</h3>
+          <p>{s.blurb}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap cta-band">
+    <div class="cta-card">
+      <h2>Not sure what to revise?</h2>
+      <p>Start with the topics pupils search for most: percentages, solving equations and Pythagoras' theorem.</p>
+      <a class="btn btn-primary" href="/guides/">Browse the most-searched topics</a>
+    </div>
+  </section>
+
+  <script type="application/json" id="tier-data" set:html={JSON.stringify({ foundation, higher })} />
+
+  <script>
+    const data = JSON.parse(document.getElementById('tier-data').textContent);
+    const heading = document.getElementById('tier-heading');
+    const emptyMsg = document.getElementById('tier-empty');
+    const tierCards = document.querySelectorAll('.tier-card');
+
+    function typeLabel(type) {
+      return { guide: 'One Minute Guide', tutorial: 'Video Tutorial', practice: 'Practice' }[type];
+    }
+
+    function typeHref(r, type) {
+      return { guide: `/guides/${r.slug}/`, tutorial: `/tutorials/${r.slug}/`, practice: `/practice/${r.slug}/` }[type];
+    }
+
+    function cardHTML(r) {
+      const type = r.resourceType.includes('guide') ? 'guide' : r.resourceType[0];
+      return `<a class="card card-link" href="${typeHref(r, type)}" data-track="guide-open" data-resource="${r.slug}">
+        <span class="tag">${typeLabel(type)}</span>
+        <h3 style="margin-top:0.7rem;font-size:1.05rem;">${r.title}</h3>
+        <p style="color:var(--ink-soft);font-size:0.92rem;margin:0.4rem 0 0;">${r.description}</p>
+      </a>`;
+    }
+
+    function render(tier) {
+      const items = data[tier] || [];
+      let anyVisible = false;
+      document.querySelectorAll('[data-tier-grid]').forEach((grid) => {
+        const topicSlug = grid.getAttribute('data-tier-grid');
+        const matches = items.filter((r) => r.topic === topicSlug);
+        const block = grid.closest('[data-topic-block]');
+        if (matches.length === 0) {
+          block.hidden = true;
+        } else {
+          block.hidden = false;
+          anyVisible = true;
+          grid.innerHTML = matches.map(cardHTML).join('');
+        }
+      });
+      emptyMsg.hidden = anyVisible;
+      heading.textContent = tier === 'foundation' ? 'Foundation topics' : 'Higher topics';
+    }
+
+    tierCards.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tierCards.forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        render(btn.dataset.tier);
+      });
+    });
+
+    render('foundation');
+  </script>
+</BaseLayout>
+
+<style>
+  .tier-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 520px; margin-top: 1.5rem; }
+  .tier-card {
+    font-family: inherit;
+    text-align: left;
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.4rem;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .tier-card h2 { font-size: 1.15rem; margin-bottom: 0.2rem; }
+  .tier-card p { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+  .tier-card.is-active { border-color: var(--accent); background: var(--accent-soft); }
+  .band { background: var(--paper); }
+  .tier-topic-block { margin-top: 2rem; }
+  .tier-topic-block:first-of-type { margin-top: 1rem; }
+  .tier-topic-block h3 { font-size: 1.05rem; margin-bottom: 0.9rem; }
+  .tier-topic-block[hidden] { display: none; }
+</style>
+

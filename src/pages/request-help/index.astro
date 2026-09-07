@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Request Help"
+  description="Suggest a maths topic you're stuck on and it could become the next One Minute Guide or tutorial."
+>
+  <section class="wrap request-help">
+    <div class="section-head">
+      <h1>What should I explain next?</h1>
+      <p>Stuck on something in maths? Tell me the topic and it could become the next One Minute Guide or tutorial.</p>
+    </div>
+
+    <!--
+      NETLIFY FORMS
+      This form is ready to work with Netlify Forms as soon as it's
+      deployed — Netlify detects the data-netlify attribute and the
+      hidden form-name field at build time. No pupil names, email
+      addresses or other personal information are collected.
+      Submissions appear under Site settings → Forms in the Netlify
+      dashboard. See README.md → "How submissions are stored".
+    -->
+    <form
+      name="request-help"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      class="request-form"
+    >
+      <input type="hidden" name="form-name" value="request-help" />
+      <p class="honeypot-field" aria-hidden="true">
+        <label>Leave this field blank: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <div class="field">
+        <label for="topic">What topic do you need help with?</label>
+        <input id="topic" name="topic" type="text" required placeholder="e.g. simultaneous equations" />
+      </div>
+
+      <fieldset class="field">
+        <legend>What year group are you in?</legend>
+        <div class="radio-row">
+          {['Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11'].map((y) => (
+            <label class="radio-pill">
+              <input type="radio" name="year-group" value={y} required />
+              <span>{y}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>What would help most?</legend>
+        <div class="radio-row">
+          {['One Minute Guide', 'Video Tutorial', 'Practice Questions', 'All of them'].map((opt) => (
+            <label class="radio-pill">
+              <input type="radio" name="help-type" value={opt} required />
+              <span>{opt}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <button type="submit" class="btn btn-primary" data-track="resource-request">Send request</button>
+    </form>
+  </section>
+</BaseLayout>
+
+<style>
+  .request-help { max-width: 620px; padding-block: 2.5rem 4rem; }
+  .request-form { display: grid; gap: 1.75rem; margin-top: 1.5rem; }
+  .field { border: none; padding: 0; margin: 0; }
+  .field label, .field legend {
+    display: block;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+    padding: 0;
+  }
+  .field input[type='text'] {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 0.75em 0.9em;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+  }
+  .radio-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .radio-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 0.55em 1em;
+    cursor: pointer;
+    font-size: 0.92rem;
+    min-height: 44px;
+  }
+  .radio-pill:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  .radio-pill input { accent-color: var(--accent); }
+  .honeypot-field { position: absolute; left: -9999px; }
+</style>

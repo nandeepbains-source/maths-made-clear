@@ -1,0 +1,76 @@
+---
+import { topics } from '../data/topics.js';
+---
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark" aria-hidden="true">M÷C</span>
+      <p>Free, clear maths support for pupils aged 11–16, written by a UK secondary school maths teacher.</p>
+    </div>
+
+    <nav aria-label="Topics">
+      <h2>Topics</h2>
+      <ul>
+        {topics.map((t) => (
+          <li><a href={`/topics/${t.slug}/`}>{t.name}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav aria-label="Site">
+      <h2>Site</h2>
+      <ul>
+        <li><a href="/guides/">Guides</a></li>
+        <li><a href="/tutorials/">Tutorials</a></li>
+        <li><a href="/practice/">Practice</a></li>
+        <li><a href="/gcse-revision/">GCSE Revision</a></li>
+        <li><a href="/maths-basics/">Maths Basics</a></li>
+        <li><a href="/request-help/">Request Help</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap">
+    <p class="fine-print">Built for pupils working towards GCSE Maths in England. No pupil accounts, no tracking beyond anonymous site analytics.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: #cfd6e8;
+    margin-top: 4rem;
+    padding-block: 3rem 1.5rem;
+  }
+  .footer-inner {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: 1.4fr 1fr 1fr;
+  }
+  @media (max-width: 700px) {
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+  .footer-brand .brand-mark {
+    font-family: var(--font-mono);
+    background: rgba(255,255,255,0.12);
+    padding: 0.3em 0.5em;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .footer-brand p { margin-top: 0.9rem; max-width: 32ch; color: #b7c0d6; }
+  .site-footer h2 {
+    color: #fff;
+    font-size: 0.95rem;
+    margin-bottom: 0.9rem;
+  }
+  .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+  .site-footer a { color: #cfd6e8; text-decoration: none; }
+  .site-footer a:hover { color: #fff; text-decoration: underline; }
+  .fine-print {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    color: #8b93ab;
+    font-size: 0.85rem;
+  }
+</style>

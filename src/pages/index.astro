@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBox from '../components/SearchBox.astro';
+import ResourceCard from '../components/ResourceCard.astro';
+import { topics } from '../data/topics.js';
+import { resources } from '../data/resources.js';
+
+const popularSlugs = ['percentage-of-an-amount', 'percentage-increase', 'fractions-of-amounts', 'solving-linear-equations', 'nth-term', 'sharing-in-a-ratio'];
+const popular = popularSlugs
+  .map((slug) => resources.find((r) => r.slug === slug))
+  .filter(Boolean)
+  .map((r) => ({ resource: r, type: r.resourceType[0] === 'tutorial' ? 'tutorial' : r.resourceType.includes('guide') ? 'guide' : r.resourceType[0] }));
+
+const newest = [...resources].slice(-6).reverse();
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  name: 'Maths Made Clearer',
+  description: 'Free maths guides, tutorials and practice for pupils aged 11–16, focused on GCSE Maths in England.',
+};
+---
+
+<BaseLayout title={null} structuredData={structuredData}>
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-symbols" aria-hidden="true">
+        <span class="sym sym-1">x²</span>
+        <span class="sym sym-2">π</span>
+        <span class="sym sym-3">%</span>
+        <span class="sym sym-4">√</span>
+      </div>
+      <p class="hero-eyebrow">Free maths support for ages 11–16</p>
+      <h1>Maths made clearer.</h1>
+      <p class="hero-sub">Quick guides, simple tutorials and targeted practice to help you understand the maths you're stuck on.</p>
+
+      <SearchBox size="hero" />
+
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="/guides/" data-track="cta-find-guide">Find a Guide</a>
+        <a class="btn btn-secondary" href="/tutorials/" data-track="cta-watch-tutorial">Watch a Tutorial</a>
+        <a class="btn btn-ghost" href="/practice/" data-track="cta-practise">Practise Maths</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <h2>Quick help</h2>
+      <p>Jump straight to a topic area.</p>
+    </div>
+    <div class="grid grid-3">
+      {topics.map((t) => (
+        <a class="card card-link topic-card" href={`/topics/${t.slug}/`} data-track="topic-select" data-topic={t.slug}>
+          <span class="topic-symbol" aria-hidden="true">{t.symbol}</span>
+          <h3>{t.name}</h3>
+          <p>{t.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap band">
+    <div class="section-head">
+      <h2>Popular right now</h2>
+      <p>The skills pupils look up most often.</p>
+    </div>
+    <div class="grid grid-3">
+      {popular.map(({ resource, type }) => <ResourceCard resource={resource} type={type} />)}
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <h2>How it works</h2>
+      <p>The same four steps for every skill on the site.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step">
+        <h3>Learn</h3>
+        <p>Read a quick explanation.</p>
+      </div>
+      <div class="step">
+        <h3>Watch</h3>
+        <p>See the maths modelled step-by-step.</p>
+      </div>
+      <div class="step">
+        <h3>Practise</h3>
+        <p>Try it yourself.</p>
+      </div>
+      <div class="step">
+        <h3>Check</h3>
+        <p>Check your answers and fix mistakes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap band">
+    <div class="section-head">
+      <h2>Newest resources</h2>
+      <p>Recently added guides, tutorials and practice.</p>
+    </div>
+    <div class="grid grid-3">
+      {newest.map((r) => <ResourceCard resource={r} type={r.resourceType[0]} />)}
+    </div>
+  </section>
+
+  <section class="wrap cta-band">
+    <div class="cta-card">
+      <h2>Can't find what you're stuck on?</h2>
+      <p>Tell us the topic and it could become the next One Minute Guide or tutorial.</p>
+      <a class="btn btn-primary" href="/request-help/">Request a topic</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--paper-raised);
+    border-bottom: 1px solid var(--line);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 34px 34px;
+    background-position: -1px -1px;
+    overflow: hidden;
+  }
+  .hero-inner {
+    position: relative;
+    padding-block: 3.5rem 3rem;
+    max-width: 760px;
+  }
+  @media (min-width: 900px) { .hero-inner { padding-block: 5.5rem 4.5rem; } }
+
+  .hero-symbols { position: absolute; inset: 0; pointer-events: none; }
+  .sym {
+    position: absolute;
+    font-family: var(--font-display);
+    color: var(--accent);
+    opacity: 0.09;
+    font-weight: 600;
+  }
+  .sym-1 { top: 6%; right: 4%; font-size: 7rem; }
+  .sym-2 { bottom: 10%; right: 18%; font-size: 4rem; }
+  .sym-3 { top: 55%; right: -1%; font-size: 5rem; }
+  .sym-4 { top: 12%; right: 30%; font-size: 3rem; }
+  @media (max-width: 700px) {
+    .hero-symbols { display: none; }
+  }
+
+  .hero-eyebrow {
+    color: var(--accent-dark);
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 0.6rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.3rem, 1.7rem + 2.6vw, 3.6rem);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.8rem;
+  }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    margin-bottom: 1.75rem;
+    max-width: 46ch;
+  }
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .band { background: var(--paper); }
+
+  .topic-card { position: relative; }
+  .topic-symbol {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem; height: 2.4rem;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    margin-bottom: 0.9rem;
+  }
+  .topic-card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .topic-card p { font-size: 0.92rem; color: var(--ink-soft); margin: 0; }
+
+  .cta-band { padding-block: 1rem 4rem; }
+  .cta-card {
+    background: var(--ink);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    text-align: left;
+  }
+  .cta-card h2 { color: #fff; font-family: var(--font-display); font-size: 1.7rem; margin-bottom: 0.6rem; }
+  .cta-card p { color: #cfd6e8; margin-bottom: 1.4rem; }
+</style>

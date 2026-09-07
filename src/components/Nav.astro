@@ -1,0 +1,178 @@
+---
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/guides/', label: 'Guides' },
+  { href: '/tutorials/', label: 'Tutorials' },
+  { href: '/practice/', label: 'Practice' },
+  { href: '/gcse-revision/', label: 'GCSE Revision' },
+  { href: '/maths-basics/', label: 'Maths Basics' },
+  { href: '/request-help/', label: 'Request Help' },
+];
+const currentPath = Astro.url.pathname;
+function isActive(href) {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="/" class="brand" aria-label="Maths Made Clearer, home">
+      <span class="brand-mark" aria-hidden="true">M÷C</span>
+      <span class="brand-name">Maths Made Clearer</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      id="menu-toggle"
+      aria-expanded="false"
+      aria-controls="primary-nav"
+    >
+      <span class="visually-hidden">Open menu</span>
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M2 5h18M2 11h18M2 17h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <ul>
+        {navItems.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <a href="/search/" class="search-btn" data-track="nav-search-open">
+        <svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M11.2 11.2 15 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span>Search</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--paper-raised);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 0.85rem;
+    gap: 1rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .brand-mark {
+    font-family: var(--font-mono);
+    background: var(--ink);
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 0.3em 0.5em;
+    border-radius: 6px;
+  }
+  .brand-name { font-size: 1.05rem; letter-spacing: -0.01em; }
+
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .primary-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--paper-raised);
+    border-bottom: 1px solid var(--line);
+    padding: 0.5rem 1.25rem 1.25rem;
+  }
+  .primary-nav.open { display: block; }
+  .primary-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .primary-nav a {
+    display: block;
+    padding: 0.85rem 0.25rem;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid var(--line);
+    min-height: 44px;
+  }
+  .primary-nav a[aria-current='page'] { color: var(--accent-dark); font-weight: 700; }
+
+  .search-btn {
+    margin-top: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.7em 1em;
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+  }
+
+  @media (min-width: 960px) {
+    .menu-toggle { display: none; }
+    .primary-nav {
+      display: flex;
+      position: static;
+      border: none;
+      padding: 0;
+      background: transparent;
+      align-items: center;
+      gap: 1.5rem;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .primary-nav ul {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .primary-nav a {
+      border-bottom: none;
+      padding: 0.5em 0.7em;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+    }
+    .primary-nav a:hover { background: var(--paper); }
+    .primary-nav a[aria-current='page'] { background: var(--accent-soft); }
+    .search-btn { margin-top: 0; }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const nav = document.getElementById('primary-nav');
+  toggle?.addEventListener('click', () => {
+    const isOpen = nav?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(!!isOpen));
+  });
+</script>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import { topics, getTopic } from '../../data/topics.js';
+import { getResourcesByTopic } from '../../data/resources.js';
+
+export function getStaticPaths() {
+  return topics.map((t) => ({ params: { slug: t.slug } }));
+}
+
+const { slug } = Astro.params;
+const topic = getTopic(slug);
+const items = getResourcesByTopic(slug);
+
+const guides = items.filter((r) => r.resourceType.includes('guide'));
+const tutorials = items.filter((r) => r.resourceType.includes('tutorial'));
+const practices = items.filter((r) => r.resourceType.includes('practice'));
+---
+
+<BaseLayout title={topic.name} description={topic.description}>
+  <section class="wrap topic-hub">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{topic.name}</span>
+    </nav>
+    <div class="section-head">
+      <h1>{topic.name}</h1>
+      <p>{topic.description}</p>
+    </div>
+
+    {guides.length > 0 && (
+      <div class="topic-block">
+        <h2>Guides</h2>
+        <div class="grid grid-3">{guides.map((r) => <ResourceCard resource={r} type="guide" />)}</div>
+      </div>
+    )}
+
+    {tutorials.length > 0 && (
+      <div class="topic-block">
+        <h2>Tutorials</h2>
+        <div class="grid grid-3">{tutorials.map((r) => <ResourceCard resource={r} type="tutorial" />)}</div>
+      </div>
+    )}
+
+    {practices.length > 0 && (
+      <div class="topic-block">
+        <h2>Practice</h2>
+        <div class="grid grid-3">{practices.map((r) => <ResourceCard resource={r} type="practice" />)}</div>
+      </div>
+    )}
+
+    {items.length === 0 && <p>Resources for this topic are coming soon.</p>}
+  </section>
+</BaseLayout>
+
+<style>
+  .topic-hub { padding-block: 2rem 3rem; }
+  .topic-block { margin-top: 2.5rem; }
+  .topic-block h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+</style>

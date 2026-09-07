@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FilterableGrid from '../../components/FilterableGrid.astro';
+import { getResourcesByType } from '../../data/resources.js';
+
+const items = getResourcesByType('practice');
+---
+
+<BaseLayout
+  title="Practise"
+  description="Watched it? Now make sure you can do it yourself, with progressively harder questions."
+>
+  <section class="wrap">
+    <div class="section-head">
+      <h1>Practise</h1>
+      <p>Watched it? Now make sure you can do it yourself.</p>
+    </div>
+    <FilterableGrid items={items} type="practice" />
+  </section>
+</BaseLayout>

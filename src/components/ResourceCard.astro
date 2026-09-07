@@ -1,0 +1,39 @@
+---
+import { getTopic } from '../data/topics.js';
+
+const { resource, type = 'guide' } = Astro.props;
+const topic = getTopic(resource.topic);
+
+const typeMeta = {
+  guide: { label: 'Guide', cta: 'View guide', href: `/guides/${resource.slug}/`, tagClass: '' },
+  tutorial: { label: 'Video', cta: 'Watch tutorial', href: `/tutorials/${resource.slug}/`, tagClass: 'tag-video' },
+  practice: { label: 'Practice', cta: 'Start practice', href: `/practice/${resource.slug}/`, tagClass: 'tag-practice' },
+};
+const meta = typeMeta[type];
+---
+
+<a class="card card-link resource-card" href={meta.href} data-track={`${type}-open`} data-resource={resource.slug}>
+  <div class="resource-card-top">
+    <span class={`tag ${meta.tagClass}`}>{meta.label}</span>
+    <span class="difficulty">{resource.difficulty}</span>
+  </div>
+  <h3>{resource.title}</h3>
+  <p class="resource-topic">{topic?.name}{resource.subtopic ? ` · ${resource.subtopic}` : ''}</p>
+  <p class="resource-desc">{resource.description}</p>
+  <span class="resource-cta">{meta.cta} →</span>
+</a>
+
+<style>
+  .resource-card { display: flex; flex-direction: column; height: 100%; }
+  .resource-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+  }
+  .difficulty { font-size: 0.8rem; color: var(--ink-soft); }
+  .resource-card h3 { font-size: 1.08rem; margin-bottom: 0.35rem; }
+  .resource-topic { font-size: 0.85rem; color: var(--accent-dark); margin-bottom: 0.5rem; font-weight: 600; }
+  .resource-desc { font-size: 0.92rem; color: var(--ink-soft); margin-bottom: 1rem; flex-grow: 1; }
+  .resource-cta { font-weight: 600; color: var(--accent-dark); font-size: 0.92rem; }
+</style>

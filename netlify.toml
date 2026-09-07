@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Netlify Forms: the request-help form on /request-help/ is detected
+# automatically at build/deploy time because the built page contains a
+# <form data-netlify="true" name="request-help"> element. No extra
+# configuration is needed here.

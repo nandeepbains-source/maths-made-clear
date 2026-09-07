@@ -1,0 +1,80 @@
+---
+import ResourceCard from './ResourceCard.astro';
+import { topics } from '../data/topics.js';
+
+const { items, type } = Astro.props; // items: resources already filtered to this type
+---
+
+<div class="filter-row" role="group" aria-label="Filter by topic">
+  <button type="button" class="filter-chip is-active" data-filter="all">All topics</button>
+  {topics.map((t) => (
+    <button type="button" class="filter-chip" data-filter={t.slug}>{t.name}</button>
+  ))}
+</div>
+
+<p id="filter-count" class="eyebrow-quiet filter-count"></p>
+
+<div class="grid grid-3" id="filterable-grid">
+  {items.map((r) => (
+    <div class="filter-item" data-topic={r.topic}>
+      <ResourceCard resource={r} type={type} />
+    </div>
+  ))}
+</div>
+
+<p id="filter-empty" class="eyebrow-quiet" hidden>No resources in this topic yet — try another, or use Request Help.</p>
+
+<style>
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .filter-chip {
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    min-height: 40px;
+  }
+  .filter-chip:hover { border-color: var(--accent); }
+  .filter-chip.is-active { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .filter-count { margin-bottom: 1.25rem; }
+</style>
+
+<script>
+  const grid = document.getElementById('filterable-grid');
+  const chips = document.querySelectorAll('.filter-chip');
+  const emptyMsg = document.getElementById('filter-empty');
+  const countMsg = document.getElementById('filter-count');
+  if (grid) {
+    const items = Array.from(grid.querySelectorAll('.filter-item'));
+
+    function apply(filter) {
+      let visible = 0;
+      items.forEach((item) => {
+        const match = filter === 'all' || item.dataset.topic === filter;
+        item.style.display = match ? '' : 'none';
+        if (match) visible += 1;
+      });
+      if (emptyMsg) emptyMsg.hidden = visible !== 0;
+      if (countMsg) countMsg.textContent = `Showing ${visible} resource${visible === 1 ? '' : 's'}`;
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+        apply(chip.dataset.filter);
+      });
+    });
+
+    apply('all');
+  }
+</script>

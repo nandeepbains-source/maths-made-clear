@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SkillTemplate from '../../components/SkillTemplate.astro';
+import { resources, getResource } from '../../data/resources.js';
+
+export function getStaticPaths() {
+  return resources
+    .filter((r) => r.resourceType.includes('practice'))
+    .map((r) => ({ params: { slug: r.slug } }));
+}
+
+const { slug } = Astro.params;
+const resource = getResource(slug);
+---
+
+<BaseLayout
+  title={`${resource.title} — Practice`}
+  description={`Practice questions on ${resource.title.toLowerCase()}.`}
+>
+  <SkillTemplate resource={resource} focus="practice" />
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SkillTemplate from '../../components/SkillTemplate.astro';
+import { resources, getResource } from '../../data/resources.js';
+import { getTopic } from '../../data/topics.js';
+
+export function getStaticPaths() {
+  return resources
+    .filter((r) => r.resourceType.includes('guide'))
+    .map((r) => ({ params: { slug: r.slug } }));
+}
+
+const { slug } = Astro.params;
+const resource = getResource(slug);
+const topic = getTopic(resource.topic);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: resource.title,
+  description: resource.description,
+  educationalLevel: resource.difficulty,
+  about: topic?.name,
+  learningResourceType: 'One Minute Guide',
+};
+---
+
+<BaseLayout
+  title={`${resource.title} — One Minute Guide`}
+  description={resource.description}
+  structuredData={structuredData}
+>
+  <SkillTemplate resource={resource} focus="guide" />
+</BaseLayout>

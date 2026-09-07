@@ -1,0 +1,72 @@
+---
+const { questions = [], slug = '', startAt = 1 } = Astro.props;
+
+function bandFor(n) {
+  if (n <= 3) return 'Straightforward';
+  if (n <= 6) return 'Apply it';
+  return 'Reasoning';
+}
+
+const items = questions.map((q, i) => ({
+  q: q.q,
+  a: q.a,
+  n: i + startAt,
+  band: bandFor(i + startAt),
+}));
+---
+
+<div class="practice-set">
+  <div class="practice-set-head">
+    <p class="eyebrow-quiet">{questions.length} question{questions.length === 1 ? '' : 's'} — gets harder as you go</p>
+    <button type="button" class="btn btn-ghost show-all-btn" data-track="answer-reveal" data-resource={slug} data-show-all>
+      Show all answers
+    </button>
+  </div>
+  <ol class="practice-list">
+    {items.map((item) => (
+      <li class="practice-q">
+        <div class="practice-q-top">
+          <span class="q-number">{item.n}</span>
+          <span class="q-band">{item.band}</span>
+        </div>
+        <p>{item.q}</p>
+        <details class="reveal">
+          <summary data-track="answer-reveal" data-resource={slug}>Reveal answer</summary>
+          <div class="reveal-body">{item.a}</div>
+        </details>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .practice-set-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .practice-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .practice-q {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.25rem;
+  }
+  .practice-q-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .q-number {
+    width: 1.7rem; height: 1.7rem;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .q-band { font-size: 0.78rem; color: var(--ink-soft); font-weight: 600; text-transform: none; }
+</style>
+
+<script>
+  document.querySelectorAll('[data-show-all]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const set = btn.closest('.practice-set');
+      set?.querySelectorAll('details.reveal').forEach((d) => { d.open = true; });
+    });
+  });
+</script>

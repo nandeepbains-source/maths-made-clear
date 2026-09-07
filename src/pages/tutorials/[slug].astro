@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SkillTemplate from '../../components/SkillTemplate.astro';
+import { resources, getResource } from '../../data/resources.js';
+import { getTopic } from '../../data/topics.js';
+
+export function getStaticPaths() {
+  return resources
+    .filter((r) => r.resourceType.includes('tutorial'))
+    .map((r) => ({ params: { slug: r.slug } }));
+}
+
+const { slug } = Astro.params;
+const resource = getResource(slug);
+const topic = getTopic(resource.topic);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: `${resource.title} — video tutorial`,
+  description: resource.description,
+  about: topic?.name,
+  uploadDate: '2026-01-01',
+};
+---
+
+<BaseLayout
+  title={`${resource.title} — Video Tutorial`}
+  description={resource.description}
+  structuredData={structuredData}
+>
+  <SkillTemplate resource={resource} focus="tutorial" />
+</BaseLayout>

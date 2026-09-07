@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FilterableGrid from '../../components/FilterableGrid.astro';
+import { getResourcesByType } from '../../data/resources.js';
+
+const items = getResourcesByType('guide');
+---
+
+<BaseLayout
+  title="One Minute Guides"
+  description="Quick, clear explanations of the maths you need to know, organised by topic."
+>
+  <section class="wrap">
+    <div class="section-head">
+      <h1>One Minute Guides</h1>
+      <p>Quick, clear explanations of the maths you need to know.</p>
+    </div>
+    <FilterableGrid items={items} type="guide" />
+  </section>
+</BaseLayout>

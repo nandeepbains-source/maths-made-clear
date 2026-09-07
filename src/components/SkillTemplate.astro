@@ -1,0 +1,182 @@
+---
+import { getTopic } from '../data/topics.js';
+import { getResource } from '../data/resources.js';
+import PracticeSet from './PracticeSet.astro';
+
+const { resource, focus = 'guide' } = Astro.props;
+const topic = getTopic(resource.topic);
+const next = resource.nextResource ? getResource(resource.nextResource) : null;
+const related = (resource.relatedResources || []).map((s) => getResource(s)).filter(Boolean);
+
+const hasGuide = resource.resourceType.includes('guide');
+const hasTutorial = resource.resourceType.includes('tutorial');
+const hasPractice = resource.resourceType.includes('practice');
+
+const yourTurn = resource.practiceQuestions?.[0];
+const restOfPractice = resource.practiceQuestions?.slice(1) || [];
+
+const tabs = [
+  hasGuide && { key: 'guide', label: 'Guide', href: `/guides/${resource.slug}/` },
+  hasTutorial && { key: 'tutorial', label: 'Watch', href: `/tutorials/${resource.slug}/` },
+  hasPractice && { key: 'practice', label: 'Practise', href: `/practice/${resource.slug}/` },
+].filter(Boolean);
+---
+
+<article class="wrap skill-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">/</span>
+    <a href={`/topics/${resource.topic}/`}>{topic?.name}</a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">{resource.title}</span>
+  </nav>
+
+  <header class="skill-header">
+    <p class="skill-topic">{topic?.name}{resource.subtopic ? ` · ${resource.subtopic}` : ''}</p>
+    <h1>{resource.title}</h1>
+    <p class="skill-desc">{resource.description}</p>
+
+    {tabs.length > 1 && (
+      <div class="tab-row" role="tablist" aria-label="View as">
+        {tabs.map((t) => (
+          <a href={t.href} class:list={['tab', t.key === focus && 'tab-active']} aria-current={t.key === focus ? 'page' : undefined}>
+            {t.label}
+          </a>
+        ))}
+      </div>
+    )}
+  </header>
+
+  {hasGuide && (
+    <section id="learn" class="skill-section">
+      <h2>Learn</h2>
+      <p class="lead">{resource.guide.summary}</p>
+      {resource.guide.paragraphs.map((p) => <p>{p}</p>)}
+
+      {resource.guide.workedExample && (
+        <div class="worked-example">
+          <p class="eyebrow-quiet">Worked example</p>
+          <p><strong>{resource.guide.workedExample.question}</strong></p>
+          <ol>
+            {resource.guide.workedExample.steps.map((s) => <li>{s}</li>)}
+          </ol>
+          <p class="worked-answer">Answer: {resource.guide.workedExample.answer}</p>
+        </div>
+      )}
+    </section>
+  )}
+
+  <section id="watch" class="skill-section">
+    <h2>Watch</h2>
+    {resource.videoId ? (
+      <div class="video-embed">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${resource.videoId}`}
+          title={`Video tutorial: ${resource.title}`}
+          loading="lazy"
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    ) : (
+      <div class="video-placeholder">
+        <p><strong>Video coming soon.</strong></p>
+        <p class="eyebrow-quiet">
+          Add a YouTube video ID to this skill's <code>videoId</code> field in
+          <code>src/data/resources.js</code> and it will appear here automatically.
+        </p>
+      </div>
+    )}
+  </section>
+
+  {yourTurn && (
+    <section id="your-turn" class="skill-section">
+      <h2>Your turn</h2>
+      <p>{yourTurn.q}</p>
+      <details class="reveal">
+        <summary data-track="answer-reveal" data-resource={resource.slug}>Reveal answer</summary>
+        <div class="reveal-body">{yourTurn.a}</div>
+      </details>
+    </section>
+  )}
+
+  {resource.commonMistake && (
+    <div class="mistake-box">
+      <span class="mistake-label">Common mistake</span>
+      <p>{resource.commonMistake}</p>
+    </div>
+  )}
+
+  <section id="practise" class="skill-section">
+    <h2>Practise</h2>
+    {hasPractice ? (
+      focus === 'practice' ? (
+        <PracticeSet questions={restOfPractice.length ? restOfPractice : resource.practiceQuestions} slug={resource.slug} startAt={restOfPractice.length ? 2 : 1} />
+      ) : (
+        <p>
+          <a class="btn btn-primary" href={`/practice/${resource.slug}/`} data-track="practice-open" data-resource={resource.slug}>
+            Go to the full practice set →
+          </a>
+        </p>
+      )
+    ) : (
+      <p class="eyebrow-quiet">Practice questions for this skill are coming soon.</p>
+    )}
+  </section>
+
+  <div class="skill-footer">
+    {next && (
+      <div class="next-skill">
+        <p class="eyebrow-quiet">Next skill</p>
+        <a class="btn btn-secondary" href={`/guides/${next.slug}/`}>{next.title} →</a>
+      </div>
+    )}
+    {related.length > 0 && (
+      <div class="related-skills">
+        <p class="eyebrow-quiet">Related skills</p>
+        <ul>
+          {related.map((r) => <li><a href={`/guides/${r.slug}/`}>{r.title}</a></li>)}
+        </ul>
+      </div>
+    )}
+  </div>
+</article>
+
+<style>
+  .skill-page { padding-block: 2.5rem 4rem; max-width: 760px; }
+  .skill-header { margin-bottom: 2rem; }
+  .skill-topic { color: var(--accent-dark); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .skill-header h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.5rem); margin-bottom: 0.6rem; }
+  .skill-desc { font-size: 1.05rem; color: var(--ink-soft); }
+
+  .tab-row { display: flex; gap: 0.4rem; margin-top: 1.25rem; border-bottom: 1px solid var(--line); }
+  .tab {
+    padding: 0.6em 0.2em;
+    margin-right: 1.25rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-bottom: 2.5px solid transparent;
+  }
+  .tab-active { color: var(--accent-dark); border-bottom-color: var(--accent); }
+
+  .skill-section { padding-block: 1.75rem; border-top: 1px solid var(--line); }
+  .skill-section:first-of-type { border-top: none; }
+  .skill-section h2 { font-size: 1.3rem; margin-bottom: 0.75rem; }
+  .lead { font-weight: 600; color: var(--ink); }
+
+  .video-embed { position: relative; padding-top: 56.25%; border-radius: var(--radius-md); overflow: hidden; background: var(--ink); }
+  .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-placeholder {
+    background: var(--paper);
+    border: 1.5px dashed var(--line);
+    border-radius: var(--radius-md);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .video-placeholder code { background: var(--accent-soft); padding: 0.1em 0.4em; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85em; }
+
+  .skill-footer { display: grid; gap: 2rem; margin-top: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); border-top: 1px solid var(--line); padding-top: 2rem; }
+  .related-skills ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+</style>

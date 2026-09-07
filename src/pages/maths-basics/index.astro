@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { basics } from '../../data/basics.js';
+---
+
+<BaseLayout
+  title="Maths Basics"
+  description="Rebuild key mathematical foundations — times tables, place value, the four operations, fractions, decimals, percentages, ratio and basic algebra."
+>
+  <section class="wrap">
+    <div class="section-head">
+      <h1>Build your basics.</h1>
+      <p>Strong maths starts with strong foundations. Choose a skill and build from there.</p>
+    </div>
+
+    <div class="grid grid-3">
+      {basics.map((b) => (
+        b.linkSlug ? (
+          <a class="card card-link" href={`/guides/${b.linkSlug}/`} data-track="guide-open" data-resource={b.linkSlug}>
+            <h3>{b.name}</h3>
+            <p>{b.blurb}</p>
+            <span class="basics-cta">Start here →</span>
+          </a>
+        ) : (
+          <div class="card basics-soon">
+            <h3>{b.name}</h3>
+            <p>{b.blurb}</p>
+            <span class="basics-cta muted">Coming soon</span>
+          </div>
+        )
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .basics-cta { display: inline-block; margin-top: 0.8rem; font-weight: 600; color: var(--accent-dark); font-size: 0.92rem; }
+  .basics-cta.muted { color: var(--ink-soft); }
+  .basics-soon { opacity: 0.85; }
+</style>
