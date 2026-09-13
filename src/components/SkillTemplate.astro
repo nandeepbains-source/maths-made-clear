@@ -50,6 +50,25 @@ const tabs = [
   {hasGuide && (
     <section id="learn" class="skill-section">
       <h2>Learn</h2>
+
+      {resource.guideImage && focus === 'guide' && (
+        <figure class="guide-visual">
+          <a href={resource.guideImage} target="_blank" rel="noopener" aria-label={`Open the ${resource.title} one minute guide full size`}>
+            <img
+              src={resource.guideImage}
+              alt={resource.guideImageAlt || `${resource.title} one minute guide`}
+              loading="eager"
+            />
+          </a>
+          <figcaption>One Minute Guide — select the image to open it full size.</figcaption>
+          {resource.guideDownload && (
+            <a class="btn btn-secondary guide-download" href={resource.guideDownload} download data-track="guide-download" data-resource={resource.slug}>
+              Download editable PowerPoint ↓
+            </a>
+          )}
+        </figure>
+      )}
+
       <p class="lead">{resource.guide.summary}</p>
       {resource.guide.paragraphs.map((p) => <p>{p}</p>)}
 
@@ -165,6 +184,23 @@ const tabs = [
   .skill-section:first-of-type { border-top: none; }
   .skill-section h2 { font-size: 1.3rem; margin-bottom: 0.75rem; }
   .lead { font-weight: 600; color: var(--ink); }
+
+  .guide-visual { margin: 0 0 1.75rem; }
+  .guide-visual > a:first-child { display: block; }
+  .guide-visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 28px rgba(28, 39, 62, 0.08);
+  }
+  .guide-visual figcaption {
+    margin-top: 0.55rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .guide-download { margin-top: 0.9rem; }
 
   .video-embed { position: relative; padding-top: 56.25%; border-radius: var(--radius-md); overflow: hidden; background: var(--ink); }
   .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
