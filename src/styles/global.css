@@ -10,15 +10,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
 
 :root {
-  /* colour */
-  --ink: #14213d;
-  --ink-soft: #3c4353;
-  --paper: #f5f6f3;
+  /* colour — matched to the John Smeaton Academy palette:
+     deep indigo-navy, bright teal accent, soft mint tints */
+  --ink: #241c56;
+  --ink-soft: #3b3480;
+  --paper: #f6f8fa;
   --paper-raised: #ffffff;
-  --line: #e1e3dc;
-  --accent: #1e7f6e;
-  --accent-dark: #145a4e;
-  --accent-soft: #e2eeea;
+  --line: #e2e4ee;
+  --accent: #2fb6a3;
+  --accent-dark: #157567;
+  --accent-soft: #dff3f0;
   --amber: #b5710a;
   --amber-soft: #faedd6;
   --focus: #1656d1;
@@ -137,10 +138,10 @@ textarea:focus-visible,
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: var(--accent-dark);
   color: #fff;
 }
-.btn-primary:hover { background: var(--accent-dark); color: #fff; }
+.btn-primary:hover { background: #0f5a50; color: #fff; }
 
 .btn-secondary {
   background: transparent;
@@ -177,7 +178,7 @@ textarea:focus-visible,
   background: currentColor;
   flex-shrink: 0;
 }
-.tag-video { background: #e7ecfa; color: #2a3f9e; }
+.tag-video { background: #e6e2f7; color: #4a3fa0; }
 .tag-practice { background: var(--amber-soft); color: var(--amber); }
 
 /* Cards -------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#14213d"/>
-  <text x="70" y="220" font-family="Georgia, serif" font-size="72" font-weight="600" fill="#ffffff">Maths made</text>
-  <text x="70" y="310" font-family="Georgia, serif" font-size="72" font-weight="600" fill="#ffffff">clearer.</text>
-  <text x="70" y="400" font-family="Arial, sans-serif" font-size="30" fill="#cfd6e8">Guides, tutorials and practice for GCSE Maths</text>
-  <text x="1050" y="560" font-family="Arial, sans-serif" font-size="40" fill="#1e7f6e" text-anchor="end">x² π % √</text>
+  <rect width="1200" height="630" fill="#241c56"/>
+  <text x="70" y="220" font-family="Georgia, serif" font-size="72" font-weight="600" fill="#ffffff">The Maths</text>
+  <text x="70" y="310" font-family="Georgia, serif" font-size="72" font-weight="600" fill="#ffffff">Corner</text>
+  <text x="70" y="400" font-family="Arial, sans-serif" font-size="30" fill="#d6d2f0">Guides, tutorials and practice for GCSE Maths</text>
+  <text x="1050" y="560" font-family="Arial, sans-serif" font-size="40" fill="#2fb6a3" text-anchor="end">x² π % √</text>
 </svg>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://maths-made-clearer.netlify.app/sitemap-index.xml
+Sitemap: https://the-maths-corner.netlify.app/sitemap-index.xml

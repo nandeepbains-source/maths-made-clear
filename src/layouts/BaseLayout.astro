@@ -12,7 +12,7 @@ const {
   noindex = false,
 } = Astro.props;
 
-const pageTitle = title ? `${title} · Maths Made Clearer` : 'Maths Made Clearer — GCSE Maths guides, tutorials & practice';
+const pageTitle = title ? `${title} · The Maths Corner` : 'The Maths Corner — GCSE Maths guides, tutorials & practice';
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL).toString();
 const ogImageURL = new URL(image, SITE_URL).toString();
 ---
@@ -34,7 +34,7 @@ const ogImageURL = new URL(image, SITE_URL).toString();
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImageURL} />
     <meta property="og:locale" content="en_GB" />
-    <meta property="og:site_name" content="Maths Made Clearer" />
+    <meta property="og:site_name" content="The Maths Corner" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -43,7 +43,7 @@ const ogImageURL = new URL(image, SITE_URL).toString();
     <meta name="twitter:image" content={ogImageURL} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#14213d" />
+    <meta name="theme-color" content="#241c56" />
 
     {structuredData && (
       <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

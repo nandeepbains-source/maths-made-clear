@@ -1,4 +1,4 @@
-# Maths Made Clearer
+# The Maths Corner
 
 A free, GCSE-focused maths support site for pupils aged 11–16 — quick guides, short video tutorials and practice questions for every skill, built around the same four steps: **Learn → Watch → Practise → Check**.
 
