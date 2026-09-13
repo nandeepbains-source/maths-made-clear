@@ -7,7 +7,7 @@ import SearchBox from '../../components/SearchBox.astro';
   <section class="wrap">
     <div class="section-head">
       <h1>Search</h1>
-      <p id="search-status">Type what you're stuck on below.</p>
+      <p id="search-status">Type what you are stuck on below.</p>
     </div>
     <SearchBox size="hero" placeholder="e.g. percentage increase, nth term, fractions..." />
 
@@ -40,7 +40,7 @@ import SearchBox from '../../components/SearchBox.astro';
       const status = document.getElementById('search-status');
       const container = document.getElementById('search-page-results');
       if (!q) {
-        status.textContent = "Type what you're stuck on above.";
+        status.textContent = "Type what you are stuck on above.";
         return;
       }
 

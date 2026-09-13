@@ -18,7 +18,7 @@ const restOfPractice = resource.practiceQuestions?.slice(1) || [];
 const tabs = [
   hasGuide && { key: 'guide', label: 'Guide', href: `/guides/${resource.slug}/` },
   hasTutorial && { key: 'tutorial', label: 'Watch', href: `/tutorials/${resource.slug}/` },
-  hasPractice && { key: 'practice', label: 'Practise', href: `/practice/${resource.slug}/` },
+  hasPractice && { key: 'practice', label: 'Practice', href: `/practice/${resource.slug}/` },
 ].filter(Boolean);
 ---
 
@@ -107,8 +107,8 @@ const tabs = [
     </div>
   )}
 
-  <section id="practise" class="skill-section">
-    <h2>Practise</h2>
+  <section id="practice" class="skill-section">
+    <h2>Practice</h2>
     {hasPractice ? (
       focus === 'practice' ? (
         <PracticeSet questions={restOfPractice.length ? restOfPractice : resource.practiceQuestions} slug={resource.slug} startAt={restOfPractice.length ? 2 : 1} />
