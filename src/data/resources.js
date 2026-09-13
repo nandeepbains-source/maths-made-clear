@@ -824,6 +824,24 @@ export const resources = [
     nextResource: 'nth-term',
     relatedResources: [],
   },
+
+  {
+    id: 20,
+    slug: 'direct-proportion-constructing-formulae',
+    title: 'Direct Proportion – Constructing Formulae',
+    topic: 'ratio',
+    subtopic: 'Direct proportion',
+    resourceType: ['tutorial'],
+    difficulty: 'Higher',
+    gcseTier: ['higher'],
+    description: 'Learn how to construct an equation for direct proportion.',
+    keywords: ['direct proportion', 'constructing formula', 'constructing equations', 'y = kx', 'constant of proportionality'],
+    videoId: '',
+    videoFile: '/tutorials/direct-proportion-constructing-equations.mp4',
+    videoLength: '8 min',
+    relatedResources: [],
+  },
+
 ];
 
 // Convenience lookups -----------------------------------------------------
